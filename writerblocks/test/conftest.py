@@ -2,7 +2,6 @@ import os.path
 import yaml
 
 import pytest
-import writerblocks
 import writerblocks.backend
 import writerblocks.common
 import writerblocks.test.dummy

@@ -9,7 +9,7 @@ def read(fname):
 
 
 setup(name="writerblocks", version='0.1',
-      packages=find_packages(exclude=['writerblocks/test']),
+      packages=find_packages(exclude=['*.test']),
       install_requires=['pypandoc', 'PyYAML'], entry_points={
         'console_scripts': ['writerblocks-cli=writerblocks.cli:main']},
       author='M. I. Madrone',
