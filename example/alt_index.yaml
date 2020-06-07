@@ -1,0 +1,16 @@
+- "Prologue": scenes/prologue.md
+- "The Beginning": 
+    - 
+        - scenes/bar.md
+        - scenes/baz.md
+    -
+        - scenes/foo.md
+        - scenes/filler_1.md
+- "The Middle": scenes/alice_backstory.md
+- "The Buildup":
+    -
+        - scenes/tbd.md
+        - scenes/filler_2.md
+    - scenes/bob_backstory.md
+- "The Climax": scenes/climactic_end.md
+- "Epilogue": scenes/epilogue.md

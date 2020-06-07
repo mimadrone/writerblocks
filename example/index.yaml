@@ -1,0 +1,16 @@
+- scenes/prologue.md
+- 
+    - 
+        - scenes/bar.md
+        - scenes/baz.md
+    -
+        - scenes/foo.md
+        - scenes/filler_1.md
+- scenes/alice_backstory.md
+- 
+    -
+        - scenes/tbd.md
+        - scenes/filler_2.md
+    - scenes/bob_backstory.md
+- scenes/climactic_end.md
+- scenes/epilogue.md

@@ -1,0 +1,8 @@
+# Default separator for files combined with this.
+default_sep: "\n\n***\n\n"
+# Separators for hierarchical elements
+seps:
+    - "\n\n## {} \n\n"
+    - "\n\n### {} \n\n"
+    - "\n\n#### {} \n\n"
+preamble: preamble.tex # Filename.
