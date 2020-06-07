@@ -52,21 +52,8 @@ any references to it in the index and consider it gone!
 
 ## Requirements
 
-writerblocks was designed and tested with Python 3.6, and is not warranted to work
-with older Python versions.  It also requires pandoc (tested with version 
+writerblocks depends on Python 3.5 or newer.  It also requires pandoc (tested with version 
 1.19.2.4) for the format conversion process.
-
-## Installation and first run
-
-It's possible to use writerblocks simply by downloading the files and invoking it via
-`python3 /path/to/download/dir/writerblocks/writerblocks/cli.py`, but it's probably nicer to
-install via `pip`, following these steps:
-
-1. Download writerblocks.
-2. Go into the writerblocks directory (`/path/to/download/dir/writerblocks` from our 
-   earlier example) and run `pip install .`
-3. Invoke writerblocks using `writerblocks-cli -h` or `writerblocks-cli --help` to see usage
-   information.
 
 ## Some usage examples
 

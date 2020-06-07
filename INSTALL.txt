@@ -1,0 +1,8 @@
+To install writerblocks from github source:
+
+* Clone the source.
+* If you just want to run writerblocks from the source directory, run:
+    python3 /path/to/source/writerblocks/writerblocks/cli.py -h
+* Otherwise, you can use "pip install ." from the source directory.
+
+To install from PyPi, simply run "pip install writerblocks"
