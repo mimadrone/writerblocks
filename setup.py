@@ -24,5 +24,6 @@ setup(name="writerblocks", version='0.1',
           'Environment :: Console',
           'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
           'Topic :: Text Processing'
-      ]
+      ],
+      python_requires='>=3.5',
       )
