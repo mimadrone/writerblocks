@@ -10,8 +10,8 @@ import yaml
 
 from typing import Callable, Dict, Iterable, List, Optional, Set, Tuple, Union
 from writerblocks.common import (FORMAT_FILENAME, CONFIG_FILENAME, INDEX_FILENAME,
-                                 DEFAULT_CONFIG, INDEX_FNAME_BEST, INDEX_FNAME_BROAD,
-                                 options)
+                                 DEFAULT_FMT, DEFAULT_CONFIG, INDEX_FNAME_BEST,
+                                 INDEX_FNAME_BROAD, options)
 
 
 def __list_dir(dirname: str) -> List[str]:
@@ -21,8 +21,8 @@ def __list_dir(dirname: str) -> List[str]:
 
 def full_path(filename: str) -> str:
     """Given a relative path within the base directory, get absolute path."""
-    if filename.startswith(options.base_dir):
-        return os.path.abspath(filename)
+    if os.path.abspath(filename) == filename:
+        return filename
     else:
         return os.path.abspath(os.path.join(options.base_dir, filename))
 
