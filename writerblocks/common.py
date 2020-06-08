@@ -11,6 +11,8 @@ INDEX_FILENAME = 'index.yaml'
 FORMAT_FILENAME = 'format.yaml'
 CONFIG_FILENAME = 'config.yaml'
 
+INI_FILENAME = 'writerblocks.ini'
+
 DEFAULT_FMT = {'default_sep': '\n\n***\n\n',
                'seps': [],
                'preamble': 'preamble.tex'}
