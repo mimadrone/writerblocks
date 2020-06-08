@@ -9,9 +9,10 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
+from typing import Optional
 
-from writerblocks.common import options
-from writerblocks.backend import parse_options, run
+from writerblocks.common import options, INI_FILENAME
+from writerblocks.backend import full_path, parse_options, run
 
 
 _settings_json = """[
@@ -114,6 +115,10 @@ class WriterBlocks(App):
         opts = vars(self.options)
         for opt in opts:
             opts[opt] = yaml.safe_load(self.config['options'][opt])
+            
+    def get_application_config(self, defaultpath: Optional[str] =None):
+        """Override to set the config file path to project dir."""
+        return full_path(INI_FILENAME)
 
     def build(self) -> BoxLayout:
         def run_callback(_):
