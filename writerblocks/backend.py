@@ -1,5 +1,6 @@
 """Backend: find, read, and recombine data."""
 
+import argparse
 import json
 import logging
 import os
@@ -7,7 +8,7 @@ import os.path
 import pypandoc
 import yaml
 
-from typing import Dict, Iterable, List, Optional, Set, Tuple, Union
+from typing import Callable, Dict, Iterable, List, Optional, Set, Tuple, Union
 from writerblocks.common import (FORMAT_FILENAME, CONFIG_FILENAME, INDEX_FILENAME,
                                  DEFAULT_CONFIG, INDEX_FNAME_BEST, INDEX_FNAME_BROAD,
                                  options)
@@ -128,6 +129,7 @@ def preamble_to_tex() -> str:
 def write_contents_to_file(text: str, filename: Optional[str] = None) -> None:
     """Write output using pandoc."""
     filename = filename or options.out_file
+    filename = full_path(filename)
     if options.in_fmt == options.out_fmt:
         with open(filename, 'w') as outfile:
             outfile.write(text)
@@ -343,6 +345,8 @@ class IndexFile(object):
             filename: index file (overrides global options if given.)
         """
         self.filename = filename or options.index_file
+        if not os.path.exists(self.filename):
+            self.filename = get_index_file_path(self.filename)
         self._contents = None
         self._leveled = None
         self._ordered = None
@@ -438,3 +442,63 @@ def new_project() -> None:
                     yaml.safe_dump(contents, stream=outfile)
                 else:
                     outfile.write('')
+
+
+def parse_options(user_args: argparse.Namespace,
+                  pandoc_args: Optional[List[str]]) -> argparse.Namespace:
+    """Collect and organize the various options set by the user.
+
+    Priority: user-specified options override config-file options, which
+    in turn override the default options.
+    """
+    if pandoc_args:
+        user_args.pandoc_args = pandoc_args
+    # Need to identify base directory to find config files.
+    if user_args.base_dir:
+        options.base_dir = user_args.base_dir
+    config_filename = full_path(CONFIG_FILENAME)
+    fmt_filename = full_path(FORMAT_FILENAME)
+    options.fmt = read_org_file(fmt_filename) if os.path.exists(fmt_filename) else DEFAULT_FMT
+    config = read_org_file(config_filename) if os.path.exists(config_filename) else {}
+    # Only try to find index file if we expect it to exist.
+    if user_args.index_file and not user_args.new_project:
+        options.index_file = get_index_file_path(filename=user_args.index_file)
+
+    # Convert to dicts for ease of combining.
+    user_opts = vars(user_args)
+    base_opts = vars(options)
+    # Replace default options with config file options first.
+    for opt in config:
+        base_opts[opt] = config[opt]
+    # Replace with command-line options next.
+    for opt in user_opts:
+        if user_opts[opt] is not None:
+            base_opts[opt] = user_opts[opt]
+    # Finally, if there's a specified "preamble" file be sure we include it.
+    if options.fmt.get('preamble'):
+        preamble = preamble_to_tex()
+        if os.path.exists(preamble):
+            options.pandoc_args.append('--include-before-body={}'.format(preamble))
+    return options
+
+
+def run(action_on_error: Optional[Callable] = lambda: None) -> str:
+    """Core program functionality, called after options are set.
+
+    Args:
+        action_on_error: optional function to run if we fail to find the index
+            file correctly.
+    """
+    if options.new_project:
+        new_project()
+        return "Created project files in {}".format(options.base_dir)
+    try:
+        text = combine_from_index(index_filename=options.index_file,
+                                  match_all=options.all_tags,
+                                  include_tags=False)
+        write_contents_to_file(text=text)
+        return "Successfully created {}".format(options.out_file)
+    except FileNotFoundError:
+        # Probably there's no index file, execute specified function.
+        action_on_error()
+        raise
