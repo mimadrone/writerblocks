@@ -8,10 +8,11 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
-setup(name="writerblocks", version='0.2',
+setup(name="writerblocks", version='0.3',
       packages=find_packages(exclude=['*.test']),
-      install_requires=['pypandoc', 'PyYAML'], entry_points={
-        'console_scripts': ['writerblocks-cli=writerblocks.cli:main']},
+      install_requires=['pypandoc', 'PyYAML', 'Kivy'], entry_points={
+        'console_scripts': ['writerblocks-cli=writerblocks.cli:main'],
+        'gui_scripts': ['writerblocks-gui=writerblocks.gui:main']},
       author='M. I. Madrone',
       author_email='mimadrone@gmx.com',
       url='https://github.com/mimadrone/writerblocks',
