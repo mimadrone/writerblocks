@@ -29,7 +29,6 @@ DEFAULT_CONFIG = {'in_fmt': 'markdown',
                   }
 
 DEFAULT_OPTIONS = Namespace(base_dir=os.path.abspath(os.path.curdir),
-                            config_file=CONFIG_FILENAME,
                             fmt=DEFAULT_FMT,
                             **DEFAULT_CONFIG
                             )

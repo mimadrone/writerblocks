@@ -1,6 +1,7 @@
 """Backend: find, read, and recombine data."""
 
 import argparse
+import configparser
 import json
 import logging
 import os
@@ -8,9 +9,10 @@ import os.path
 import pypandoc
 import yaml
 
+from copy import deepcopy
 from typing import Callable, Dict, Iterable, List, Optional, Set, Tuple, Union
 from writerblocks.common import (FORMAT_FILENAME, CONFIG_FILENAME, INDEX_FILENAME,
-                                 DEFAULT_FMT, DEFAULT_CONFIG, INDEX_FNAME_BEST,
+                                 DEFAULT_FMT, INI_FILENAME, INDEX_FNAME_BEST,
                                  INDEX_FNAME_BROAD, options)
 
 
@@ -429,19 +431,49 @@ def new_project() -> None:
     """Create files for a new project."""
     os.makedirs(options.base_dir, exist_ok=True)
     fmt_file = full_path(FORMAT_FILENAME)
-    config_file = full_path(CONFIG_FILENAME)
     index_file = full_path(INDEX_FILENAME)
+    if not os.path.exists(fmt_file):
+        with open(fmt_file, 'w') as fmt:
+            yaml.safe_dump(DEFAULT_FMT, fmt)
+    if not os.path.exists(index_file):
+        with open(index_file, 'w') as idx:
+            idx.write('')
+    create_ini()
+
+
+def parse_ini():
+    ini_path = full_path(INI_FILENAME)
+    config = configparser.ConfigParser()
     opts = vars(options)
-    default_config = {key: opts[key] for key in DEFAULT_CONFIG}
-    for (fname, contents) in [(fmt_file, options.fmt),
-                              (config_file, default_config),
-                              (index_file, None)]:
-        if not os.path.exists(path=fname):
-            with open(fname, 'w') as outfile:
-                if contents:
-                    yaml.safe_dump(contents, stream=outfile)
-                else:
-                    outfile.write('')
+    config['config'] = deepcopy(opts)
+    config['config'].pop('fmt')
+    if os.path.exists(ini_path):
+        config.read(ini_path)
+        for var in config['config']:
+            opts[var] = yaml.safe_load(config['config'][var])
+    return config
+
+
+def create_ini():
+    ini_path = full_path(INI_FILENAME)
+    config = parse_ini()
+    if not os.path.exists(ini_path):
+        with open(ini_path, 'w') as outfile:
+            config.write(outfile)
+    return config
+
+
+def read_and_replace_old_config():
+    config_filename = full_path(CONFIG_FILENAME)
+    if os.path.exists(config_filename):
+        logging.warning("Converting config.yaml to writerblocks.ini section")
+        config_contents = read_org_file(config_filename)
+        opts = vars(options)
+        for opt in config_contents:
+            opts[opt] = config_contents[opt]
+        os.remove(config_filename)
+    ini_contents = create_ini()
+    return ini_contents
 
 
 def parse_options(user_args: argparse.Namespace,
@@ -456,10 +488,14 @@ def parse_options(user_args: argparse.Namespace,
     # Need to identify base directory to find config files.
     if user_args.base_dir:
         options.base_dir = user_args.base_dir
-    config_filename = full_path(CONFIG_FILENAME)
+
+    # Load config file options.
+    read_and_replace_old_config()
+
+    # Load format file.
     fmt_filename = full_path(FORMAT_FILENAME)
     options.fmt = read_org_file(fmt_filename) if os.path.exists(fmt_filename) else DEFAULT_FMT
-    config = read_org_file(config_filename) if os.path.exists(config_filename) else {}
+
     # Only try to find index file if we expect it to exist.
     if user_args.index_file and not user_args.new_project:
         options.index_file = get_index_file_path(filename=user_args.index_file)
@@ -467,9 +503,6 @@ def parse_options(user_args: argparse.Namespace,
     # Convert to dicts for ease of combining.
     user_opts = vars(user_args)
     base_opts = vars(options)
-    # Replace default options with config file options first.
-    for opt in config:
-        base_opts[opt] = config[opt]
     # Replace with command-line options next.
     for opt in user_opts:
         if user_opts[opt] is not None:

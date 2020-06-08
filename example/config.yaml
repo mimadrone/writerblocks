@@ -1,5 +1,0 @@
-out_fmt: pdf
-in_fmt: markdown
-out_file: example.pdf
-exclude_tags: ["bad idea", "no", "no:no"]
-pandoc_args: []

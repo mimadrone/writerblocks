@@ -21,12 +21,15 @@ writerblocks works using a project directory, containing the following:
    those scenes.  It may simply be a list that tells what order the files
    should be read in, or it may group them under volumes, chapters, sections,
    or some other hierarchical structure.
-3. A `config` file, which is a YAML or JSON file that contains default options
+3. A configuration file, `writerblocks.ini`, that contains default options
    that would otherwise be provided on the command line.
 4. A `format` file, which is a YAML or JSON file that contains instructions for
    how to format the story.  This file can specify what to use to separate
    scenes, chapters, or whatever other grouping mechanisms are used in the
    index.
+
+(The configuration and format files, as well as an empty index file, can be
+automatically generated; see usage examples for how to do that.)
 
 It's additionally possible to create a `preamble` file whose contents will be
 automatically attached to the beginning of the final output file.
