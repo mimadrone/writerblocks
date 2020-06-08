@@ -21,7 +21,10 @@ DEFAULT_CONFIG = {'in_fmt': 'markdown',
                   'index_file': 'index.yaml',
                   'tags': [],
                   'blacklist_tags': [],
-                  'pandoc_args': []}
+                  'pandoc_args': [],
+                  'new_project': False,
+                  'all_tags': False
+                  }
 
 DEFAULT_OPTIONS = Namespace(base_dir=os.path.abspath(os.path.curdir),
                             config_file=CONFIG_FILENAME,
@@ -30,4 +33,3 @@ DEFAULT_OPTIONS = Namespace(base_dir=os.path.abspath(os.path.curdir),
                             )
 
 options = copy(DEFAULT_OPTIONS)
-
