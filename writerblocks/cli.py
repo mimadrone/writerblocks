@@ -21,7 +21,7 @@ def setup_parser() -> argparse.ArgumentParser:
     parser.add_argument('-r', '--in-fmt', help="Text file format (default: {})"
                         .format(DEFAULT_OPTIONS.in_fmt))
     parser.add_argument('-o', '--out-file',
-                        help='Output file name, not including extension'
+                        help='Output file name, including extension'
                              ' (default: "{}")'.format(DEFAULT_OPTIONS.out_file))
     parser.add_argument('-i', '--index-file',
                         help='Index file to use; if not provided, will attempt '
