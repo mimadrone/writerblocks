@@ -38,10 +38,9 @@ def setup_parser() -> argparse.ArgumentParser:
                         help='Create a new project with default contents.')
 
     parser.epilog = ("""All other command-line options will be passed to pandoc 
-                     when output is generated.\n
-                     All options except --all-tags, --base-dir and --new-project
-                     may be set in config.yaml; command-line options will override 
-                     config file ones.""")
+                     when output is generated.
+                     All options may be set in writerblocks.ini; command-line
+                     options will override config file ones.""")
     return parser
 
 
