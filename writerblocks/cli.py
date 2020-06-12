@@ -28,12 +28,13 @@ def setup_parser() -> argparse.ArgumentParser:
                              'to automatically locate in project directory')
     parser.add_argument('-t', '--tags', nargs='+',
                         help="Ignore text files that don't have these tags "
-                             "(space-separated)")
+                             "(space- or comma-separated)")
     parser.add_argument('-a', '--all-tags', action='store_true',
                         help='Use only files that match *all* specified tags'
                              ' (overrides default behavior)')
     parser.add_argument('-b', '--blacklist-tags', nargs='+',
-                        help='Ignore files with these tags (space-separated)')
+                        help='Ignore files with these tags (space- or '
+                             'comma-separated)')
     parser.add_argument('-n', '--new-project', action='store_true',
                         help='Create a new project with default contents.')
 

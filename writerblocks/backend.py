@@ -47,6 +47,19 @@ def get_index_file_path(filename: Optional[str] = None):
     return full_path(filename=filename)
 
 
+def split_tags(tags: Union[List[str], Set[str], str]) -> Set[str]:
+    """Given a representation of tags, turn it into a set."""
+    if isinstance(tags, set):
+        return tags
+    if isinstance(tags, str):
+        tags = [tags]
+    split = set()
+    for line in tags:
+        split = split.union({word.strip() for word in line.split(',') if
+                             word.strip()})
+    return split
+
+
 def extract_tags(lines: List[str]) -> Tuple[Set[str], List[str]]:
     """Given a list of strings beginning with tags block, parse out the tags.
 
@@ -441,7 +454,8 @@ def new_project() -> None:
     create_ini()
 
 
-def parse_ini():
+def parse_ini() -> configparser.ConfigParser:
+    """Parse configuration file."""
     ini_path = full_path(INI_FILENAME)
     config = configparser.ConfigParser()
     opts = vars(options)
@@ -454,7 +468,11 @@ def parse_ini():
     return config
 
 
-def create_ini():
+def create_ini() -> configparser.ConfigParser:
+    """Create a new default configuration file if none exists.
+
+    Returns the configuration stored in that file.
+    """
     ini_path = full_path(INI_FILENAME)
     config = parse_ini()
     if not os.path.exists(ini_path):
@@ -463,7 +481,8 @@ def create_ini():
     return config
 
 
-def read_and_replace_old_config():
+def read_and_replace_old_config() -> configparser.ConfigParser:
+    """Replace config.yaml with writerblocks.ini."""
     config_filename = full_path(CONFIG_FILENAME)
     if os.path.exists(config_filename):
         logging.warning("Converting config.yaml to writerblocks.ini section")
@@ -507,6 +526,12 @@ def parse_options(user_args: argparse.Namespace,
     for opt in user_opts:
         if user_opts[opt] is not None:
             base_opts[opt] = user_opts[opt]
+    # Make nice sets of tags.
+    if options.tags:
+        options.tags = split_tags(tags=options.tags)
+    if options.blacklist_tags:
+        options.blacklist_tags = split_tags(options.blacklist_tags)
+
     # Finally, if there's a specified "preamble" file be sure we include it.
     if options.fmt.get('preamble'):
         preamble = preamble_to_tex()

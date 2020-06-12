@@ -59,7 +59,7 @@ writerblocks depends on Python 3.5 or newer.  It also requires pandoc (tested wi
 1.19.2.4) for the format conversion process.
 
 ## Some usage examples
-
+  * Launch the GUI tool: `writerblocks-gui`
   * Create a new project with default options in directory `some/dir`:
 
     `writerblocks-cli --base-dir /some/dir --new-project`

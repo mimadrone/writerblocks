@@ -12,7 +12,7 @@ from kivy.uix.label import Label
 from typing import Optional
 
 from writerblocks.common import options, INI_FILENAME
-from writerblocks.backend import full_path, parse_options, run
+from writerblocks.backend import split_tags, full_path, parse_options, run
 
 
 _settings_json = """[
@@ -159,7 +159,7 @@ class WriterBlocks(App):
     def on_config_change(self, config, section, key, value):
         opts = vars(options)
         if key in ['tags', 'blacklist_tags']:
-            opts[key] = [v.strip() for v in value.split(',')]
+            opts[key] = split_tags(value)
         else:
             opts[key] = value
 
